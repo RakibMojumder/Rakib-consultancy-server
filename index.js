@@ -31,10 +31,22 @@ app.get('/', (req, res) => {
 });
 
 app.get('/services', async (req, res) => {
-    const query = {};
-    const cursor = Services.find(query);
-    const services = await cursor.toArray();
-    res.send(services)
+    try {
+        const query = {};
+        const cursor = Services.find(query);
+        const services = await cursor.toArray();
+        res.send({
+            success: true,
+            message: 'Successfully got the services',
+            data: services
+        })
+    } catch (error) {
+        console.log(error.message);
+        res.send({
+            success: false,
+            error: error.message
+        })
+    }
 });
 
 app.get('/services/:id', (req, res) => {
