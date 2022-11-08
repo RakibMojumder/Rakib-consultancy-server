@@ -106,9 +106,33 @@ app.get('/services/:id', async (req, res) => {
 })
 
 // get reviews api
+app.get('/reviews/:id', async (req, res) => {
+    try {
+        const id = req.params.id;
+        const query = { service_id: id }
+        const reviews = await Reviews.find(query).sort({ data: 'desc' }).toArray();
+        res.send({
+            success: true,
+            message: 'Successfully got the reviews',
+            data: reviews
+        })
+    } catch (error) {
+        console.log(error);
+        res.send({
+            success: false,
+            error: error.message
+        })
+    }
+})
+
+
 app.get('/reviews', async (req, res) => {
     try {
-        const reviews = await Reviews.find({}).toArray();
+        const email = req.query.email;
+        const query = {
+            email: email
+        };
+        const reviews = await Reviews.find(query).sort({ date: 'desc' }).toArray();
         res.send({
             success: true,
             message: 'Successfully got the reviews',
