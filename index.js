@@ -105,7 +105,26 @@ app.get('/services/:id', async (req, res) => {
     }
 })
 
+// get reviews api
+app.get('/reviews', async (req, res) => {
+    try {
+        const reviews = await Reviews.find({}).toArray();
+        res.send({
+            success: true,
+            message: 'Successfully got the reviews',
+            data: reviews
+        })
+    } catch (error) {
+        console.log(error);
+        res.send({
+            success: false,
+            error: error.message
+        })
+    }
+})
 
+
+// post reviews api
 app.post('/reviews', async (req, res) => {
     try {
         const reviews = req.body;
