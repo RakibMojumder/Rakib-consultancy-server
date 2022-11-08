@@ -13,7 +13,9 @@ app.use(express.json());
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0.zzty5cj.mongodb.net/?retryWrites=true&w=majority`;
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
 
+// Database Collection
 const Services = client.db('rakib-consultancy').collection('services');
+const Reviews = client.db('rakib-consultancy').collection('reviews');
 
 // connect database
 const dbConnect = async () => {
@@ -96,6 +98,32 @@ app.get('/services/:id', async (req, res) => {
         })
     } catch (error) {
         console.log(error.message);
+        res.send({
+            success: false,
+            error: error.message
+        })
+    }
+})
+
+
+app.post('/reviews', async (req, res) => {
+    try {
+        const reviews = req.body;
+        const result = await Reviews.insertOne(reviews);
+        if (result.insertedId) {
+            res.send({
+                success: true,
+                message: 'Successfully insert the reviews',
+                data: reviews
+            })
+        } else {
+            res.send({
+                success: false,
+                message: 'Could not insert the reviews',
+            })
+        }
+    } catch (error) {
+        console.log(error);
         res.send({
             success: false,
             error: error.message
