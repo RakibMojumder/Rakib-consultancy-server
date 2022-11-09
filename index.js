@@ -172,6 +172,35 @@ app.post('/reviews', async (req, res) => {
             error: error.message
         })
     }
+});
+
+
+// Delete Review
+app.delete('/reviews/:id', async (req, res) => {
+    try {
+        const id = req.params.id;
+        const query = { _id: ObjectId(id) };
+        const result = await Reviews.deleteOne(query);
+
+        if (result.deletedCount > 0) {
+            res.send({
+                success: true,
+                message: 'Successfully delete one item',
+                data: result
+            })
+        } else {
+            res.send({
+                success: false,
+                message: 'Could not delete item'
+            })
+        }
+    } catch (error) {
+        console.log(error)
+        res.send({
+            success: false,
+            error: error.message
+        })
+    }
 })
 
 app.listen(port, () => { console.log(`server is running on port ${port}`) })
