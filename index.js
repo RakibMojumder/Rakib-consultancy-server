@@ -61,7 +61,7 @@ app.get('/', (req, res) => {
     res.send('API is running');
 });
 
-
+// post service data to database
 app.post('/services', async (req, res) => {
     try {
         const service = req.body;
@@ -86,6 +86,7 @@ app.post('/services', async (req, res) => {
 })
 
 
+// Get service data from database
 app.get('/services', async (req, res) => {
     try {
         const limit = parseInt(req.query.limit);
@@ -98,7 +99,7 @@ app.get('/services', async (req, res) => {
                 data: services
             });
         } else {
-            const services = await Services.find({}).toArray();
+            const services = await (await Services.find({}).toArray());
             res.send({
                 success: true,
                 message: 'Successfully got the services',
@@ -115,6 +116,8 @@ app.get('/services', async (req, res) => {
     }
 });
 
+
+// Get service data by id from database
 app.get('/services/:id', async (req, res) => {
     try {
         const id = req.params.id;
@@ -164,9 +167,7 @@ app.get('/reviews', verifyJWT, async (req, res) => {
             return res.status(403).send({ message: 'Forbidden access' })
         }
 
-        const query = {
-            email: email
-        };
+        const query = { email: email };
         const reviews = await Reviews.find(query).sort({ date: 'desc' }).toArray();
         res.send({
             success: true,
